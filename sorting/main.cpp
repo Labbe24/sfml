@@ -3,42 +3,28 @@
 #include <random>
 #include <algorithm>
 #include <iostream>
+#include "bubble_sort.hpp"
 
+const int NUM = 200;
 const int SIZE = 200;
-
-int shuffle(int i)
-{
-    return std::rand() % i;
-}
-
-bool compare(sf::RectangleShape first, sf::RectangleShape second)
-{
-    return first.getSize().y < second.getSize().y;
-}
-
-void sort()
-{
-}
+const int Y_POSITION = 400;
+const int X_MARGIN = 5;
 
 int main()
 {
     std::random_device rd;
+    sf::Color white = sf::Color::White;
     auto rng = std::default_random_engine{rd()};
-    sf::RenderWindow window(sf::VideoMode(SIZE * 5, 400), "Sorting visualizer");
+    sf::RenderWindow window(sf::VideoMode(1000, Y_POSITION), "Sorting visualizer");
+    BubbleSort bubble_sort = BubbleSort();
     std::vector<sf::RectangleShape> lines;
 
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i < NUM; i++)
     {
-        sf::RectangleShape line(sf::Vector2f(2, i * 2));
+        sf::RectangleShape line(sf::Vector2f(SIZE / NUM * 2, i * 2));
         line.rotate(180);
-        line.setPosition(i * 5, 400);
+        line.setPosition(i * SIZE / NUM * X_MARGIN, Y_POSITION);
         lines.push_back(line);
-    }
-
-    std::shuffle(std::begin(lines), std::end(lines), rng);
-    for (int i = 0; i < SIZE; i++)
-    {
-        lines[i].setPosition(i * 5, 400);
     }
 
     while (window.isOpen())
@@ -56,18 +42,15 @@ int main()
                     std::shuffle(std::begin(lines), std::end(lines), rng);
                     for (int i = 0; i < SIZE; i++)
                     {
-                        lines[i].setPosition(i * 5, 400);
+                        lines[i].setFillColor(white);
+                        lines[i].setPosition(i * SIZE / NUM * X_MARGIN, Y_POSITION);
                     }
-                    std::cout << "Shuffle!" << std::endl;
+                    std::cout << "Shuffled!" << std::endl;
                 }
                 else if (event.key.code == sf::Keyboard::Enter)
                 {
-                    std::sort(lines.begin(), lines.end(), compare);
-                    for (int i = 0; i < SIZE; i++)
-                    {
-                        lines[i].setPosition(i * 5, 400);
-                    }
-                    std::cout << "Sort!" << std::endl;
+                    bubble_sort.sort(lines, window);
+                    std::cout << "Sorted!" << std::endl;
                 }
             }
         }
