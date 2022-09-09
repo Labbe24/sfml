@@ -5,9 +5,10 @@
 #include <iostream>
 #include "bubble_sort.hpp"
 
-const int NUM = 200;
-const int SIZE = 200;
-const int Y_POSITION = 400;
+const int NUM = 20;
+const int WIDTH = 200;
+const int WIN_WIDTH = 1000;
+const int WIN_HEIGHT = 650;
 const int X_MARGIN = 5;
 
 int main()
@@ -15,15 +16,16 @@ int main()
     std::random_device rd;
     sf::Color white = sf::Color::White;
     auto rng = std::default_random_engine{rd()};
-    sf::RenderWindow window(sf::VideoMode(1000, Y_POSITION), "Sorting visualizer");
+    sf::RenderWindow window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Sorting visualizer");
     BubbleSort bubble_sort = BubbleSort();
     std::vector<sf::RectangleShape> lines;
+    const float height_multiplier = WIN_HEIGHT / NUM;
 
     for (int i = 0; i < NUM; i++)
     {
-        sf::RectangleShape line(sf::Vector2f(SIZE / NUM * 2, i * 2));
+        sf::RectangleShape line(sf::Vector2f(WIDTH / NUM * 2, i * height_multiplier));
         line.rotate(180);
-        line.setPosition(i * SIZE / NUM * X_MARGIN, Y_POSITION);
+        line.setPosition(i * WIDTH / NUM * X_MARGIN, WIN_HEIGHT);
         lines.push_back(line);
     }
 
@@ -37,20 +39,30 @@ int main()
 
             if (event.type == sf::Event::EventType::KeyPressed)
             {
+                // SHUFFLE
                 if (event.key.code == sf::Keyboard::Space)
                 {
                     std::shuffle(std::begin(lines), std::end(lines), rng);
-                    for (int i = 0; i < SIZE; i++)
+                    for (int i = 0; i < NUM; i++)
                     {
                         lines[i].setFillColor(white);
-                        lines[i].setPosition(i * SIZE / NUM * X_MARGIN, Y_POSITION);
+                        lines[i].setPosition(i * WIDTH / NUM * X_MARGIN, WIN_HEIGHT);
                     }
-                    std::cout << "Shuffled!" << std::endl;
                 }
+                // SORT
                 else if (event.key.code == sf::Keyboard::Enter)
                 {
                     bubble_sort.sort(lines, window);
-                    std::cout << "Sorted!" << std::endl;
+                }
+            }
+
+            // NUMBER INPUT
+            if (event.type == sf::Event::TextEntered)
+            {
+                if (event.text.unicode > 47 && event.text.unicode < 59)
+                {
+                    sf::String input = event.text.unicode;
+                    std::cout << input.toAnsiString() << std::endl;
                 }
             }
         }

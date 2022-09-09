@@ -3,8 +3,9 @@
 
 void BubbleSort::sort(std::vector<sf::RectangleShape> &v, sf::RenderWindow &window)
 {
-    const int SIZE = 200;
+    const int WIDTH = 200;
     const int X_MARGIN = 5;
+    const int win_height = window.getSize().y;
     int n = v.size();
     sf::Color red = sf::Color::Red;
     sf::Color white = sf::Color::White;
@@ -19,8 +20,8 @@ void BubbleSort::sort(std::vector<sf::RectangleShape> &v, sf::RenderWindow &wind
             if (v[j].getSize().y > v[j + 1].getSize().y)
             {
                 std::swap(v[j], v[j + 1]);
-                v[j].setPosition(j * SIZE / n * X_MARGIN, 400);
-                v[j + 1].setPosition((j + 1) * SIZE / n * X_MARGIN, 400);
+                v[j].setPosition(j * WIDTH / n * X_MARGIN, win_height);
+                v[j + 1].setPosition((j + 1) * WIDTH / n * X_MARGIN, win_height);
             }
 
             if (j == n - i - 2)
