@@ -11,6 +11,7 @@ class Configuration
 public:
     Configuration();
     Configuration(float sortingSpeed, SortingAlgorithm sortingAlgo);
+    void setSpeed(const float speed);
     float getSpeed() const;
 
 private:

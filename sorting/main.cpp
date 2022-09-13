@@ -9,31 +9,21 @@
 #include "sprite_button.hpp"
 
 const int WIDTH = 200;
-const int WIN_WIDTH = 1000;
-const int WIN_HEIGHT = 650;
+const int WIN_WIDTH = 1600;
+const int WIN_HEIGHT = 800;
 
-bool isMainWindow = false;
-bool isMenuWindow = true;
+bool isMainWindow = true;
 bool isConfigWindow = false;
 
 // CALLBACK FUNCTIONS
-void startBtnOnClick()
+void backToMainBtnOnClick()
 {
-    isMenuWindow = false;
     isConfigWindow = false;
     isMainWindow = true;
 }
 
-void backToMenuBtnOnClick()
-{
-    isMenuWindow = true;
-    isConfigWindow = false;
-    isMainWindow = false;
-}
-
 void configBtnClick()
 {
-    isMenuWindow = false;
     isConfigWindow = true;
     isMainWindow = false;
 }
@@ -78,8 +68,8 @@ int main()
     int speed = 20;
 
     sf::RenderWindow window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Sorting visualizer");
-    Configuration config(0.0f, SortingAlgorithm::Bubble);
-    BubbleSort bubble_sort(config);
+    BubbleSort bubble_sort;
+    bubble_sort.setSpeed(50);
     std::vector<sf::RectangleShape> lines;
 
     auto startSortingClick = [&]()
@@ -100,9 +90,9 @@ int main()
 
     // MAIN VIEW
     // BACK BUTTON
-    Button backToMenuBtn(font, "Back");
+    Button backToMenuBtn(font, "Config");
     backToMenuBtn.setPosition(40, 20);
-    backToMenuBtn.onClick(backToMenuBtnOnClick);
+    backToMenuBtn.onClick(configBtnClick);
     backToMenuBtn.setColor(sf::Color::White);
     backToMenuBtn.setHoverColor(sf::Color::Red);
 
@@ -132,29 +122,17 @@ int main()
     slider.setColor(sf::Color::White);
     slider.setHoverColor(sf::Color::Green);
 
-    // MENU VIEW
-    // MENU TITLE
-    sf::Text menuTitle("Sorting visulizer", font);
-    menuTitle.setPosition(WIN_WIDTH / 2 - (menuTitle.getGlobalBounds().width / 2), 20);
-    menuTitle.setFillColor(sf::Color::Black);
-
-    // START BUTTON - Go to main view
-    Button menuStartBtn(font, "Start");
-    menuStartBtn.setPosition(WIN_WIDTH / 2 - (menuStartBtn.getWidth() / 2), 100);
-    menuStartBtn.onClick(startBtnOnClick);
-    menuStartBtn.setHoverColor(sf::Color::Green);
-
-    // CONFIG BUTTON - Go to config view
-    Button configBtn(font, "Config");
-    configBtn.setPosition(WIN_WIDTH / 2 - (configBtn.getWidth() / 2), 180);
-    configBtn.onClick(configBtnClick);
-    configBtn.setHoverColor(sf::Color::Green);
-
     // CONFIG VIEW
     // CONFIG TITLE
     sf::Text configTitle("Configuration", font);
     configTitle.setPosition(WIN_WIDTH / 2 - (configTitle.getGlobalBounds().width / 2), 20);
     configTitle.setFillColor(sf::Color::Black);
+
+    Button back(font, "Back");
+    back.setPosition(40, 20);
+    back.onClick(backToMainBtnOnClick);
+    back.setColor(sf::Color::Black);
+    back.setHoverColor(sf::Color::Red);
 
     // SPEED LABEL
     sf::Text speedInputLabel("Speed:", font);
@@ -175,10 +153,26 @@ int main()
     speedSlider.setColor(sf::Color::Black);
     speedSlider.setHoverColor(sf::Color::Green);
 
-    // SLECT SORTING METHOD
+    // SELECT SORTING METHOD LABEL
     sf::Text sortingInputLabel("Sorting:", font);
     sortingInputLabel.setPosition(WIN_WIDTH / 2 - (sortingInputLabel.getGlobalBounds().width / 2 + 100), 260);
     sortingInputLabel.setFillColor(sf::Color::Black);
+
+    // SELECT SORTING METHOD BUTTONS
+    Button bubbleSort(font, "Bubble");
+    bubbleSort.setPosition(WIN_WIDTH / 2 - (bubbleSort.getWidth() / 2), 340);
+    bubbleSort.onClick([&]() {});
+    bubbleSort.setHoverColor(sf::Color::Green);
+
+    Button mergeSort(font, "Merge");
+    mergeSort.setPosition(WIN_WIDTH / 2 - (mergeSort.getWidth() / 2), 400);
+    mergeSort.onClick([&]() {});
+    mergeSort.setHoverColor(sf::Color::Green);
+
+    Button quickSort(font, "Quick");
+    quickSort.setPosition(WIN_WIDTH / 2 - (quickSort.getWidth() / 2), 460);
+    quickSort.onClick([&]() {});
+    quickSort.setHoverColor(sf::Color::Green);
 
     // CREATE LINES
     lines = createLines(num);
@@ -191,7 +185,6 @@ int main()
         // MAIN VIEW
         if (isMainWindow)
         {
-            backToMenuBtn.setColor(sf::Color::White);
             while (window.pollEvent(event))
             {
                 // EVENT HANDLERS
@@ -228,32 +221,16 @@ int main()
             backToMenuBtn.draw(window);
             window.display();
         }
-        // MENU VIEW
-        else if (isMenuWindow)
-        {
-            while (window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-
-                menuStartBtn.handleEvent(event, window);
-                configBtn.handleEvent(event, window);
-            }
-            // DRAW
-            window.clear(sf::Color::White);
-            window.draw(menuTitle);
-            menuStartBtn.draw(window);
-            configBtn.draw(window);
-            window.display();
-        }
         // CONFIG VIEW
         else if (isConfigWindow)
         {
-            backToMenuBtn.setColor(sf::Color::Black);
             while (window.pollEvent(event))
             {
                 // EVENT HANDLERS
-                backToMenuBtn.handleEvent(event, window);
+                back.handleEvent(event, window);
+                bubbleSort.handleEvent(event, window);
+                mergeSort.handleEvent(event, window);
+                quickSort.handleEvent(event, window);
                 speedSlider.handleEvent(event, window);
                 if (event.type == sf::Event::Closed)
                     window.close();
@@ -262,6 +239,7 @@ int main()
             // UPDATE SLIDER
             speedSlider.update(window);
             int newSpeed = speedSlider.getValue();
+            bubble_sort.setSpeed(newSpeed);
             std::string sliderValue = std::to_string(newSpeed);
             speedText.setString(sliderValue + "%");
 
@@ -271,7 +249,10 @@ int main()
             window.draw(speedInputLabel);
             window.draw(speedText);
             window.draw(sortingInputLabel);
-            backToMenuBtn.draw(window);
+            back.draw(window);
+            bubbleSort.draw(window);
+            mergeSort.draw(window);
+            quickSort.draw(window);
             speedSlider.draw(window);
             window.display();
         }

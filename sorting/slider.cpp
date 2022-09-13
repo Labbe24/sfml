@@ -15,7 +15,7 @@ Slider::Slider(const int min, const int max)
 
     min_ = min;
     max_ = max;
-    value_ = min_;
+    value_ = min;
 }
 
 void Slider::draw(sf::RenderWindow &window)
@@ -49,10 +49,10 @@ void Slider::update(sf::RenderWindow &window)
 
     if (isMouseLeftPressed_)
     {
-        if (rectangle_.getGlobalBounds().contains(mousePos.x - circle_.getRadius(), rectangle_.getPosition().y))
+        if (rectangle_.getGlobalBounds().contains(mousePos.x, rectangle_.getPosition().y))
         {
             circle_.setPosition(mousePos.x - circle_.getRadius(), circle_.getPosition().y);
-            setValue(mousePos.x - circle_.getRadius());
+            setValue(mousePos.x);
         }
     }
 }
@@ -96,7 +96,6 @@ int Slider::getValue() const
 
 void Slider::setValue(int value)
 {
-    // set value_ between 20 and 100
     float lowerBound = rectangle_.getPosition().x;
     float upperBound = rectangle_.getSize().x;
     float v = value - lowerBound;

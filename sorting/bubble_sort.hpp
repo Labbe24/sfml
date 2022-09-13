@@ -7,11 +7,11 @@
 class BubbleSort
 {
 public:
-    BubbleSort(Configuration config);
     void sort(std::vector<sf::RectangleShape> &v, sf::RenderWindow &window);
+    void setSpeed(const float speed);
 
 private:
-    Configuration config_;
+    float speed_;
 };
 
 #endif

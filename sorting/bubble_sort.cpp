@@ -1,11 +1,6 @@
 #include "bubble_sort.hpp"
 #include <iostream>
 
-BubbleSort::BubbleSort(Configuration config)
-{
-    config_ = config;
-}
-
 void BubbleSort::sort(std::vector<sf::RectangleShape> &v, sf::RenderWindow &window)
 {
     const int win_width = window.getSize().x;
@@ -36,8 +31,13 @@ void BubbleSort::sort(std::vector<sf::RectangleShape> &v, sf::RenderWindow &wind
                 window.draw(v[d]);
             }
             window.display();
-            sf::sleep(sf::milliseconds(10.0f - config_.getSpeed()));
+            sf::sleep(sf::milliseconds(100.0f - speed_));
             v[j].setFillColor(sf::Color::White);
         }
     }
+}
+
+void BubbleSort::setSpeed(const float speed)
+{
+    speed_ = speed;
 }
