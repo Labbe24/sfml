@@ -11,7 +11,6 @@
 const int WIDTH = 200;
 const int WIN_WIDTH = 1000;
 const int WIN_HEIGHT = 650;
-const int X_MARGIN = 5;
 
 bool isMainWindow = false;
 bool isMenuWindow = true;
@@ -76,9 +75,11 @@ void shuffleLines(std::vector<sf::RectangleShape> &lines)
 int main()
 {
     int num = 20;
-    int speedPercentage = 20;
+    int speed = 20;
+
     sf::RenderWindow window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Sorting visualizer");
-    BubbleSort bubble_sort;
+    Configuration config(0.0f, SortingAlgorithm::Bubble);
+    BubbleSort bubble_sort(config);
     std::vector<sf::RectangleShape> lines;
 
     auto startSortingClick = [&]()
@@ -97,100 +98,86 @@ int main()
         return EXIT_FAILURE;
     }
 
-    // SLIDER
-    Slider slider;
-
-    // NUM INPUT
-    sf::String input;
-    sf::Text numInput;
-    numInput.setFont(font);
-    numInput.setPosition(WIN_WIDTH - 80, 20);
-    numInput.setString(std::to_string(num));
-
-    // MENU TITLE
-    sf::Text menuTitle("Sorting visulizer", font);
-    menuTitle.setPosition(WIN_WIDTH / 2 - (menuTitle.getGlobalBounds().width / 2), 20);
-    menuTitle.setFillColor(sf::Color::Black);
-
-    // MENU BUTTONS
-    Button menuStartBtn(font, "Start");
-    menuStartBtn.setPosition(WIN_WIDTH / 2 - (menuStartBtn.getWidth() / 2), 100);
-    menuStartBtn.onClick(startBtnOnClick);
-    menuStartBtn.setHoverColor(sf::Color::Green);
-
-    Button configBtn(font, "Config");
-    configBtn.setPosition(WIN_WIDTH / 2 - (configBtn.getWidth() / 2), 180);
-    configBtn.onClick(configBtnClick);
-    configBtn.setHoverColor(sf::Color::Green);
-
-    // MAIN BUTTONS
+    // MAIN VIEW
+    // BACK BUTTON
     Button backToMenuBtn(font, "Back");
     backToMenuBtn.setPosition(40, 20);
     backToMenuBtn.onClick(backToMenuBtnOnClick);
     backToMenuBtn.setColor(sf::Color::White);
     backToMenuBtn.setHoverColor(sf::Color::Red);
 
+    // START BUTTON
     Button startBtn(font, "Start");
     startBtn.setPosition(140, 20);
     startBtn.onClick(startSortingClick);
     startBtn.setColor(sf::Color::White);
     startBtn.setHoverColor(sf::Color::Green);
 
+    // SHUFFLE BUTTON
     Button shuffleBtn(font, "Shuffle");
     shuffleBtn.setPosition(240, 20);
     shuffleBtn.onClick(startShuffleClick);
     shuffleBtn.setColor(sf::Color::White);
     shuffleBtn.setHoverColor(sf::Color::Yellow);
 
+    // NUMBER TEXT
+    sf::String input;
+    sf::Text numInput;
+    numInput.setFont(font);
+    numInput.setPosition(WIN_WIDTH - 80, 20);
+    numInput.setString(std::to_string(num));
+
+    // NUMBER SLIDER
+    Slider slider(20, 200);
+    slider.setColor(sf::Color::White);
+    slider.setHoverColor(sf::Color::Green);
+
+    // MENU VIEW
+    // MENU TITLE
+    sf::Text menuTitle("Sorting visulizer", font);
+    menuTitle.setPosition(WIN_WIDTH / 2 - (menuTitle.getGlobalBounds().width / 2), 20);
+    menuTitle.setFillColor(sf::Color::Black);
+
+    // START BUTTON - Go to main view
+    Button menuStartBtn(font, "Start");
+    menuStartBtn.setPosition(WIN_WIDTH / 2 - (menuStartBtn.getWidth() / 2), 100);
+    menuStartBtn.onClick(startBtnOnClick);
+    menuStartBtn.setHoverColor(sf::Color::Green);
+
+    // CONFIG BUTTON - Go to config view
+    Button configBtn(font, "Config");
+    configBtn.setPosition(WIN_WIDTH / 2 - (configBtn.getWidth() / 2), 180);
+    configBtn.onClick(configBtnClick);
+    configBtn.setHoverColor(sf::Color::Green);
+
+    // CONFIG VIEW
     // CONFIG TITLE
     sf::Text configTitle("Configuration", font);
     configTitle.setPosition(WIN_WIDTH / 2 - (configTitle.getGlobalBounds().width / 2), 20);
     configTitle.setFillColor(sf::Color::Black);
 
-    // CONFIG INPUT
+    // SPEED LABEL
     sf::Text speedInputLabel("Speed:", font);
     speedInputLabel.setPosition(WIN_WIDTH / 2 - (speedInputLabel.getGlobalBounds().width / 2 + 100), 100);
     speedInputLabel.setFillColor(sf::Color::Black);
 
-    sf::String speedInputStr(std::to_string(speedPercentage) + "%");
-    sf::Text speedInput;
-    speedInput.setFont(font);
-    speedInput.setString(speedInputStr);
-    speedInput.setPosition(WIN_WIDTH / 2 - (speedInput.getGlobalBounds().width / 2), 100);
-    speedInput.setFillColor(sf::Color::Black);
+    // SPEED TEXT
+    sf::String speedStr(std::to_string(speed) + "%");
+    sf::Text speedText;
+    speedText.setFont(font);
+    speedText.setString(speedStr);
+    speedText.setPosition(WIN_WIDTH / 2 - (speedText.getGlobalBounds().width / 2), 100);
+    speedText.setFillColor(sf::Color::Black);
 
-    auto increaseSpeed = [&]()
-    {
-        if (speedPercentage < 100)
-        {
-            speedPercentage++;
-            sf::String newSpeed(std::to_string(speedPercentage) + "%");
-            speedInput.setString(newSpeed);
-        }
-    };
+    // SPEED SLIDER
+    Slider speedSlider(0, 100);
+    speedSlider.setPosition(WIN_WIDTH / 2 - (speedSlider.getWidth() / 2), 180);
+    speedSlider.setColor(sf::Color::Black);
+    speedSlider.setHoverColor(sf::Color::Green);
 
-    auto decreaseSpeed = [&]()
-    {
-        if (speedPercentage > 0)
-        {
-            speedPercentage--;
-            sf::String newSpeed(std::to_string(speedPercentage) + "%");
-            speedInput.setString(newSpeed);
-        }
-    };
-
-    SpriteButton arrowUpBtn("arrow_up.png");
-    arrowUpBtn.onClick(increaseSpeed);
-    arrowUpBtn.setHoverColor(sf::Color(0, 255, 0, 128));
-    arrowUpBtn.setPosition(WIN_WIDTH / 2 - (arrowUpBtn.getWidth() / 2 - 70), 80);
-
-    SpriteButton arrowDownBtn("arrow_down.png");
-    arrowDownBtn.onClick(decreaseSpeed);
-    arrowDownBtn.setHoverColor(sf::Color(0, 255, 0, 128));
-    arrowDownBtn.setPosition(WIN_WIDTH / 2 - (arrowDownBtn.getWidth() / 2 - 70), 120);
-
+    // SLECT SORTING METHOD
     sf::Text sortingInputLabel("Sorting:", font);
-    sortingInputLabel.setPosition(WIN_WIDTH / 2 - (sortingInputLabel.getGlobalBounds().width / 2 + 100), 180);
+    sortingInputLabel.setPosition(WIN_WIDTH / 2 - (sortingInputLabel.getGlobalBounds().width / 2 + 100), 260);
     sortingInputLabel.setFillColor(sf::Color::Black);
 
     // CREATE LINES
@@ -198,13 +185,16 @@ int main()
 
     while (window.isOpen())
     {
+        // NEWEST EVENT
         sf::Event event;
+
         // MAIN VIEW
         if (isMainWindow)
         {
             backToMenuBtn.setColor(sf::Color::White);
             while (window.pollEvent(event))
             {
+                // EVENT HANDLERS
                 shuffleBtn.handleEvent(event, window);
                 startBtn.handleEvent(event, window);
                 backToMenuBtn.handleEvent(event, window);
@@ -212,34 +202,9 @@ int main()
 
                 if (event.type == sf::Event::Closed)
                     window.close();
-
-                if (event.type == sf::Event::EventType::KeyPressed)
-                {
-                    // if (event.key.code == sf::Keyboard::BackSpace)
-                    // {
-                    //     if (input.getSize() > 0)
-                    //     {
-                    //         input.erase(input.getSize() - 1, 1);
-                    //         numInput.setString(input);
-                    //     }
-                    // }
-                }
-
-                // NUMBER INPUT
-                // if (event.type == sf::Event::TextEntered)
-                // {
-                //     if (event.text.unicode > 47 && event.text.unicode < 59)
-                //     {
-                //         if (input.getSize() < 3)
-                //         {
-                //             input += event.text.unicode;
-                //             // NUM = stoi(input.toAnsiString());
-                //             numInput.setString(input);
-                //         }
-                //     }
-                // }
             }
 
+            // UPDATE SLIDER AND CREATE NEW LINES
             slider.update(window);
             int newNum = slider.getValue();
             if (newNum != num)
@@ -287,21 +252,27 @@ int main()
             backToMenuBtn.setColor(sf::Color::Black);
             while (window.pollEvent(event))
             {
+                // EVENT HANDLERS
                 backToMenuBtn.handleEvent(event, window);
-                arrowUpBtn.handleEvent(event, window);
-                arrowDownBtn.handleEvent(event, window);
+                speedSlider.handleEvent(event, window);
                 if (event.type == sf::Event::Closed)
                     window.close();
             }
+
+            // UPDATE SLIDER
+            speedSlider.update(window);
+            int newSpeed = speedSlider.getValue();
+            std::string sliderValue = std::to_string(newSpeed);
+            speedText.setString(sliderValue + "%");
+
             // DRAW
             window.clear(sf::Color::White);
             window.draw(configTitle);
             window.draw(speedInputLabel);
-            window.draw(speedInput);
+            window.draw(speedText);
             window.draw(sortingInputLabel);
-            arrowUpBtn.draw(window);
-            arrowDownBtn.draw(window);
             backToMenuBtn.draw(window);
+            speedSlider.draw(window);
             window.display();
         }
     }

@@ -3,13 +3,15 @@
 
 enum SortingAlgorithm
 {
-    BubbleSort
+    Bubble
 };
 
-class Config
+class Configuration
 {
 public:
-    Config(float sortingSpeed, SortingAlgorithm sortingAlgo);
+    Configuration();
+    Configuration(float sortingSpeed, SortingAlgorithm sortingAlgo);
+    float getSpeed() const;
 
 private:
     float sortingSpeed_;
