@@ -11,9 +11,9 @@ all: app
 %.o: %.hpp
 		$(CXX) -c $< -o $@
 
-app: main.o bubble_sort.o button.o slider.o
+app: main.o bubble_sort.o button.o slider.o sprite_button.o
 		@echo "** Building the app"
-		$(CXX) -o app main.o bubble_sort.o button.o slider.o $(LIBS)
+		$(CXX) -o app main.o bubble_sort.o button.o slider.o sprite_button.o $(LIBS)
 
 clean:
 		@echo "** Removing object files and executable..."

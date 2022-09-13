@@ -7,16 +7,12 @@
 class Button
 {
 public:
-    Button(sf::Font &font, sf::String label);
+    Button(sf::Font &font, sf::String label, float x, float y);
     void draw(sf::RenderWindow &window);
     void handleEvent(sf::Event event, sf::RenderWindow &window);
     void onClick(std::function<void()> callback);
-    void setPosition(float x, float y);
     void setColor(sf::Color color);
     void setHoverColor(sf::Color color);
-
-    float getWidth() const;
-    float getHeigth() const;
 
 private:
     sf::Text text_;

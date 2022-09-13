@@ -1,25 +1,24 @@
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef SPRITE_BUTTON_H
+#define SPRITE_BUTTON_H
 
 #include <SFML/Graphics.hpp>
 #include <functional>
 
-class Button
+class SpriteButton
 {
 public:
-    Button(sf::Font &font, sf::String label);
+    SpriteButton(sf::String imagePath);
     void draw(sf::RenderWindow &window);
     void handleEvent(sf::Event event, sf::RenderWindow &window);
     void onClick(std::function<void()> callback);
-    void setPosition(float x, float y);
     void setColor(sf::Color color);
     void setHoverColor(sf::Color color);
-
+    void setPosition(float x, float y);
     float getWidth() const;
-    float getHeigth() const;
 
 private:
-    sf::Text text_;
+    sf::Sprite sprite_;
+    sf::Texture texture_;
     std::function<void()> click_;
     sf::Color color_;
     sf::Color hoverColor_;

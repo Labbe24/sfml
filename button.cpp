@@ -1,13 +1,12 @@
 #include "button.hpp"
 
-Button::Button(sf::Font &font, sf::String label)
+Button::Button(sf::Font &font, sf::String label, float x, float y)
 {
     text_.setFont(font);
     text_.setString(label);
+    text_.setPosition(x, y);
     color_ = sf::Color::Black;
     hoverColor_ = sf::Color::White;
-
-    text_.setFillColor(color_);
 }
 
 void Button::draw(sf::RenderWindow &window)
@@ -29,10 +28,7 @@ void Button::handleEvent(sf::Event event, sf::RenderWindow &window)
         text_.setFillColor(hoverColor_);
         if (event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            if (click_ != NULL)
-            {
-                click_();
-            }
+            click_();
             text_.setFillColor(color_);
         }
     }
@@ -40,11 +36,6 @@ void Button::handleEvent(sf::Event event, sf::RenderWindow &window)
     {
         text_.setFillColor(color_);
     }
-}
-
-void Button::setPosition(float x, float y)
-{
-    text_.setPosition(x, y);
 }
 
 void Button::setColor(sf::Color color)
@@ -55,14 +46,4 @@ void Button::setColor(sf::Color color)
 void Button::setHoverColor(sf::Color color)
 {
     hoverColor_ = color;
-}
-
-float Button::getWidth() const
-{
-    return text_.getGlobalBounds().width;
-}
-
-float Button::getHeigth() const
-{
-    return text_.getGlobalBounds().height;
 }
