@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include "bubble_sort.hpp"
+#include "merge_sort.hpp"
 #include "button.hpp"
 #include "slider.hpp"
 #include "sprite_button.hpp"
@@ -68,13 +69,24 @@ int main()
     int speed = 20;
 
     sf::RenderWindow window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Sorting visualizer");
-    BubbleSort bubble_sort;
-    bubble_sort.setSpeed(50);
+    BubbleSort bubbleSort;
+    MergeSort mergeSort;
+    bubbleSort.setSpeed(50);
+    mergeSort.setSpeed(50);
     std::vector<sf::RectangleShape> lines;
 
     auto startSortingClick = [&]()
     {
-        bubble_sort.sort(lines, window);
+        mergeSort.sort(lines, 0, num - 1, window);
+        // bubbleSort.sort(lines, window);
+
+        for (auto it = lines.begin(); it != lines.end(); it++)
+        {
+            it->setFillColor(sf::Color::Green);
+            sf::sleep(sf::milliseconds(10.0f));
+            window.draw(*it);
+            window.display();
+        }
     };
 
     auto startShuffleClick = [&]()
@@ -123,11 +135,12 @@ int main()
     slider.setHoverColor(sf::Color::Green);
 
     // CONFIG VIEW
-    // CONFIG TITLE
+    // TITLE
     sf::Text configTitle("Configuration", font);
     configTitle.setPosition(WIN_WIDTH / 2 - (configTitle.getGlobalBounds().width / 2), 20);
     configTitle.setFillColor(sf::Color::Black);
 
+    // BACK BUTTON
     Button back(font, "Back");
     back.setPosition(40, 20);
     back.onClick(backToMainBtnOnClick);
@@ -159,27 +172,27 @@ int main()
     sortingInputLabel.setFillColor(sf::Color::Black);
 
     // SELECT SORTING METHOD BUTTONS
-    Button bubbleSort(font, "Bubble");
-    bubbleSort.setPosition(WIN_WIDTH / 2 - (bubbleSort.getWidth() / 2), 340);
-    bubbleSort.onClick([&]() {});
-    bubbleSort.setHoverColor(sf::Color::Green);
+    Button bubbleSortBtn(font, "Bubble");
+    bubbleSortBtn.setPosition(WIN_WIDTH / 2 - (bubbleSortBtn.getWidth() / 2), 340);
+    bubbleSortBtn.onClick([&]() {});
+    bubbleSortBtn.setHoverColor(sf::Color::Green);
 
-    Button mergeSort(font, "Merge");
-    mergeSort.setPosition(WIN_WIDTH / 2 - (mergeSort.getWidth() / 2), 400);
-    mergeSort.onClick([&]() {});
-    mergeSort.setHoverColor(sf::Color::Green);
+    Button mergeSortBtn(font, "Merge");
+    mergeSortBtn.setPosition(WIN_WIDTH / 2 - (mergeSortBtn.getWidth() / 2), 400);
+    mergeSortBtn.onClick([&]() {});
+    mergeSortBtn.setHoverColor(sf::Color::Green);
 
-    Button quickSort(font, "Quick");
-    quickSort.setPosition(WIN_WIDTH / 2 - (quickSort.getWidth() / 2), 460);
-    quickSort.onClick([&]() {});
-    quickSort.setHoverColor(sf::Color::Green);
+    Button quickSortBtn(font, "Quick");
+    quickSortBtn.setPosition(WIN_WIDTH / 2 - (quickSortBtn.getWidth() / 2), 460);
+    quickSortBtn.onClick([&]() {});
+    quickSortBtn.setHoverColor(sf::Color::Green);
 
     // CREATE LINES
     lines = createLines(num);
 
     while (window.isOpen())
     {
-        // NEWEST EVENT
+        // CURRENT EVENT
         sf::Event event;
 
         // MAIN VIEW
@@ -228,9 +241,9 @@ int main()
             {
                 // EVENT HANDLERS
                 back.handleEvent(event, window);
-                bubbleSort.handleEvent(event, window);
-                mergeSort.handleEvent(event, window);
-                quickSort.handleEvent(event, window);
+                bubbleSortBtn.handleEvent(event, window);
+                mergeSortBtn.handleEvent(event, window);
+                quickSortBtn.handleEvent(event, window);
                 speedSlider.handleEvent(event, window);
                 if (event.type == sf::Event::Closed)
                     window.close();
@@ -239,7 +252,8 @@ int main()
             // UPDATE SLIDER
             speedSlider.update(window);
             int newSpeed = speedSlider.getValue();
-            bubble_sort.setSpeed(newSpeed);
+            bubbleSort.setSpeed(newSpeed);
+            mergeSort.setSpeed(newSpeed);
             std::string sliderValue = std::to_string(newSpeed);
             speedText.setString(sliderValue + "%");
 
@@ -250,9 +264,9 @@ int main()
             window.draw(speedText);
             window.draw(sortingInputLabel);
             back.draw(window);
-            bubbleSort.draw(window);
-            mergeSort.draw(window);
-            quickSort.draw(window);
+            bubbleSortBtn.draw(window);
+            mergeSortBtn.draw(window);
+            quickSortBtn.draw(window);
             speedSlider.draw(window);
             window.display();
         }

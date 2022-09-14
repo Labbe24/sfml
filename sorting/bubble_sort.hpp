@@ -2,7 +2,6 @@
 #define BUBBLESORT_H
 
 #include <SFML/Graphics.hpp>
-#include "configuration.hpp"
 
 class BubbleSort
 {

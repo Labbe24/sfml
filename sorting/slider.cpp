@@ -4,13 +4,9 @@
 Slider::Slider(const int min, const int max)
 {
     rectangle_.setSize(sf::Vector2f(300, 5));
-    // rectangle_.setOutlineColor(sf::Color::Red);
-    // rectangle_.setOutlineThickness(5);
     rectangle_.setPosition(400, 35);
 
     circle_.setRadius(15);
-    // circle_.setOutlineColor(sf::Color::Red);
-    // circle_.setOutlineThickness(5);
     circle_.setPosition(400, 23);
 
     min_ = min;

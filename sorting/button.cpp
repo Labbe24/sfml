@@ -8,10 +8,15 @@ Button::Button(sf::Font &font, sf::String label)
     hoverColor_ = sf::Color::White;
 
     text_.setFillColor(color_);
+    isActive_ = false;
 }
 
 void Button::draw(sf::RenderWindow &window)
 {
+    if (isActive_)
+    {
+        text_.setFillColor(sf::Color::Yellow);
+    }
     window.draw(text_);
 }
 
@@ -33,6 +38,7 @@ void Button::handleEvent(sf::Event event, sf::RenderWindow &window)
             {
                 click_();
             }
+            // isActive_ = true;
             text_.setFillColor(color_);
         }
     }
@@ -55,6 +61,11 @@ void Button::setColor(sf::Color color)
 void Button::setHoverColor(sf::Color color)
 {
     hoverColor_ = color;
+}
+
+void Button::setActive(const bool active)
+{
+    isActive_ = active;
 }
 
 float Button::getWidth() const

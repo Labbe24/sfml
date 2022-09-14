@@ -14,6 +14,7 @@ public:
     void setPosition(float x, float y);
     void setColor(sf::Color color);
     void setHoverColor(sf::Color color);
+    void setActive(const bool active);
 
     float getWidth() const;
     float getHeigth() const;
@@ -23,6 +24,7 @@ private:
     std::function<void()> click_;
     sf::Color color_;
     sf::Color hoverColor_;
+    bool isActive_;
 };
 
 #endif
