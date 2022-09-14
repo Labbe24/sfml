@@ -67,8 +67,6 @@ int main()
 {
     int num = 20;
     int speed = 20;
-    bool bubble = true;
-    bool merge = false;
 
     sf::RenderWindow window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Sorting visualizer");
 
@@ -191,14 +189,12 @@ int main()
     bubbleSortBtn.onClick([&]()
                           { bubbleSortBtn.setActive(true);
                           quickSortBtn.setActive(false);
-                          mergeSortBtn.setActive(false);
-                          bubble = true;
-                          merge = false; });
+                          mergeSortBtn.setActive(false); 
+                          algo = &bubbleSort; });
     quickSortBtn.onClick([&]()
                          { quickSortBtn.setActive(true);
                             bubbleSortBtn.setActive(false);
-                            mergeSortBtn.setActive(false);
-                            algo = &bubbleSort; });
+                            mergeSortBtn.setActive(false); });
     mergeSortBtn.onClick([&]()
                          { mergeSortBtn.setActive(true);
                             quickSortBtn.setActive(false);
