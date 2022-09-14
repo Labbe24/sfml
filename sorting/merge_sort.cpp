@@ -1,15 +1,22 @@
 #include "merge_sort.hpp"
 #include <iostream>
 
-void MergeSort::sort(std::vector<sf::RectangleShape> &lines, const int start, const int end, sf::RenderWindow &window)
+void MergeSort::sort(std::vector<sf::RectangleShape> &lines, sf::RenderWindow &window)
+{
+    const int start = 0;
+    const int end = lines.size() - 1;
+    mergeSort(lines, start, end, window);
+}
+
+void MergeSort::mergeSort(std::vector<sf::RectangleShape> &lines, const int start, const int end, sf::RenderWindow &window)
 {
     if (start >= end)
     {
         return;
     }
     const int mid = (start + end) / 2;
-    sort(lines, start, mid, window);
-    sort(lines, mid + 1, end, window);
+    mergeSort(lines, start, mid, window);
+    mergeSort(lines, mid + 1, end, window);
     merge(lines, start, mid, end, window);
 }
 

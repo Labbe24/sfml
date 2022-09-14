@@ -38,7 +38,6 @@ void Button::handleEvent(sf::Event event, sf::RenderWindow &window)
             {
                 click_();
             }
-            // isActive_ = true;
             text_.setFillColor(color_);
         }
     }

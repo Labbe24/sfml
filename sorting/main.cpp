@@ -67,18 +67,22 @@ int main()
 {
     int num = 20;
     int speed = 20;
+    bool bubble = true;
+    bool merge = false;
 
     sf::RenderWindow window(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT), "Sorting visualizer");
+
     BubbleSort bubbleSort;
     MergeSort mergeSort;
+    SortAlgo *algo = &bubbleSort;
+
     bubbleSort.setSpeed(50);
     mergeSort.setSpeed(50);
     std::vector<sf::RectangleShape> lines;
 
     auto startSortingClick = [&]()
     {
-        mergeSort.sort(lines, 0, num - 1, window);
-        // bubbleSort.sort(lines, window);
+        algo->sort(lines, window);
 
         for (auto it = lines.begin(); it != lines.end(); it++)
         {
@@ -174,18 +178,32 @@ int main()
     // SELECT SORTING METHOD BUTTONS
     Button bubbleSortBtn(font, "Bubble");
     bubbleSortBtn.setPosition(WIN_WIDTH / 2 - (bubbleSortBtn.getWidth() / 2), 340);
-    bubbleSortBtn.onClick([&]() {});
     bubbleSortBtn.setHoverColor(sf::Color::Green);
 
     Button mergeSortBtn(font, "Merge");
     mergeSortBtn.setPosition(WIN_WIDTH / 2 - (mergeSortBtn.getWidth() / 2), 400);
-    mergeSortBtn.onClick([&]() {});
     mergeSortBtn.setHoverColor(sf::Color::Green);
 
     Button quickSortBtn(font, "Quick");
     quickSortBtn.setPosition(WIN_WIDTH / 2 - (quickSortBtn.getWidth() / 2), 460);
-    quickSortBtn.onClick([&]() {});
     quickSortBtn.setHoverColor(sf::Color::Green);
+
+    bubbleSortBtn.onClick([&]()
+                          { bubbleSortBtn.setActive(true);
+                          quickSortBtn.setActive(false);
+                          mergeSortBtn.setActive(false);
+                          bubble = true;
+                          merge = false; });
+    quickSortBtn.onClick([&]()
+                         { quickSortBtn.setActive(true);
+                            bubbleSortBtn.setActive(false);
+                            mergeSortBtn.setActive(false);
+                            algo = &bubbleSort; });
+    mergeSortBtn.onClick([&]()
+                         { mergeSortBtn.setActive(true);
+                            quickSortBtn.setActive(false);
+                            bubbleSortBtn.setActive(false);
+                            algo = &mergeSort; });
 
     // CREATE LINES
     lines = createLines(num);
