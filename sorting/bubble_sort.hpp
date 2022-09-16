@@ -11,7 +11,7 @@ public:
     void setSpeed(const float speed);
 
 private:
-    float speed_;
+    float m_speed;
 };
 
 #endif

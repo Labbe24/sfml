@@ -3,51 +3,71 @@
 
 Slider::Slider(const int min, const int max)
 {
-    rectangle_.setSize(sf::Vector2f(300, 5));
-    rectangle_.setPosition(400, 35);
+    m_rectangle.setSize(sf::Vector2f(300, 5));
+    m_rectangle.setPosition(400, 35);
 
-    circle_.setRadius(15);
-    circle_.setPosition(400, 23);
+    m_circle.setRadius(15);
+    m_circle.setPosition(400, 23);
 
-    min_ = min;
-    max_ = max;
-    value_ = min;
+    m_min = min;
+    m_max = max;
+    m_value = min;
 }
 
-void Slider::draw(sf::RenderWindow &window)
+Slider::~Slider()
 {
-    window.draw(rectangle_);
-    window.draw(circle_);
+    delete m_text;
 }
 
-void Slider::handleEvent(sf::Event event, sf::RenderWindow &window)
+void Slider::draw(sf::RenderWindow *window)
 {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-
-    if (event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (m_text != nullptr)
     {
-        if (circle_.getGlobalBounds().contains(mousePos.x, mousePos.y))
+        int newSpeed = getValue();
+        std::string sliderValue = std::to_string(newSpeed);
+        m_text->setString(sliderValue);
+        window->draw(*m_text);
+    }
+    window->draw(m_rectangle);
+    window->draw(m_circle);
+}
+
+void Slider::handleEvent(sf::Event *event, sf::RenderWindow *window)
+{
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+
+    if (event->type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if (m_circle.getGlobalBounds().contains(mousePos.x, mousePos.y))
         {
-            circle_.setFillColor(hoverColor_);
-            isMouseLeftPressed_ = true;
+            m_circle.setFillColor(m_hoverColor);
+            m_isMouseLeftPressed = true;
         }
     }
-    else if (event.type == sf::Event::MouseButtonReleased && !sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    else if (event->type == sf::Event::MouseButtonReleased && !sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        circle_.setFillColor(color_);
-        isMouseLeftPressed_ = false;
+        m_circle.setFillColor(m_color);
+        m_isMouseLeftPressed = false;
+    }
+    if (m_isMouseLeftPressed)
+    {
+        if (m_rectangle.getGlobalBounds().contains(mousePos.x, m_rectangle.getPosition().y))
+        {
+            m_circle.setPosition(mousePos.x - m_circle.getRadius(), m_circle.getPosition().y);
+            setValue(mousePos.x);
+        }
     }
 }
 
-void Slider::update(sf::RenderWindow &window)
+void Slider::update(sf::RenderWindow *window)
 {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
-    if (isMouseLeftPressed_)
+    if (m_isMouseLeftPressed)
     {
-        if (rectangle_.getGlobalBounds().contains(mousePos.x, rectangle_.getPosition().y))
+        if (m_rectangle.getGlobalBounds().contains(mousePos.x, m_rectangle.getPosition().y))
         {
-            circle_.setPosition(mousePos.x - circle_.getRadius(), circle_.getPosition().y);
+            m_circle.setPosition(mousePos.x - m_circle.getRadius(), m_circle.getPosition().y);
             setValue(mousePos.x);
         }
     }
@@ -55,52 +75,58 @@ void Slider::update(sf::RenderWindow &window)
 
 void Slider::setPosition(const float x, const float y)
 {
-    rectangle_.setPosition(x, y + 12);
-    circle_.setPosition(x, y);
+    m_rectangle.setPosition(x, y + 12);
+    m_circle.setPosition(x, y);
 }
 
 void Slider::setMax(const int max)
 {
-    max_ = max;
+    m_max = max;
 }
 
 void Slider::setMin(const int min)
 {
-    min_ = min;
+    m_min = min;
 }
 
 void Slider::setColor(const sf::Color color)
 {
-    rectangle_.setFillColor(color);
-    color_ = color;
+    m_rectangle.setFillColor(color);
+    m_circle.setFillColor(color);
+    m_color = color;
 }
 
 void Slider::setHoverColor(const sf::Color hoverColor)
 {
-    hoverColor_ = hoverColor;
+    m_hoverColor = hoverColor;
+}
+
+void Slider::setText(sf::Text *text)
+{
+    m_text = text;
 }
 
 float Slider::getWidth() const
 {
-    return rectangle_.getGlobalBounds().width;
+    return m_rectangle.getGlobalBounds().width;
 }
 
 int Slider::getValue() const
 {
-    return value_;
+    return m_value;
 }
 
-void Slider::setValue(int value)
+void Slider::setValue(const unsigned int value)
 {
-    float lowerBound = rectangle_.getPosition().x;
-    float upperBound = rectangle_.getSize().x;
+    float lowerBound = m_rectangle.getPosition().x;
+    float upperBound = m_rectangle.getSize().x;
     float v = value - lowerBound;
-    float newValue = (v / upperBound) * max_;
+    float newValue = (v / upperBound) * m_max;
 
-    if (newValue < min_)
+    if (newValue < m_min)
     {
-        newValue = min_;
+        newValue = m_min;
     }
 
-    value_ = newValue;
+    m_value = newValue;
 }

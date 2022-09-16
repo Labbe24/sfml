@@ -1,78 +1,80 @@
 #include "button.hpp"
+#include <iostream>
 
 Button::Button(sf::Font &font, sf::String label)
 {
-    text_.setFont(font);
-    text_.setString(label);
-    color_ = sf::Color::Black;
-    hoverColor_ = sf::Color::White;
+    m_text.setFont(font);
+    m_text.setString(label);
+    m_color = sf::Color::Black;
+    m_hoverColor = sf::Color::White;
 
-    text_.setFillColor(color_);
-    isActive_ = false;
+    m_text.setFillColor(m_color);
+    m_isActive = false;
 }
 
-void Button::draw(sf::RenderWindow &window)
+void Button::draw(sf::RenderWindow *window)
 {
-    if (isActive_)
+    if (m_isActive)
     {
-        text_.setFillColor(sf::Color::Yellow);
+        m_text.setFillColor(sf::Color::Yellow);
     }
-    window.draw(text_);
+    window->draw(m_text);
 }
 
 void Button::onClick(std::function<void()> callback)
 {
-    click_ = callback;
+    m_click = callback;
 }
 
-void Button::handleEvent(sf::Event event, sf::RenderWindow &window)
+void Button::handleEvent(sf::Event *event, sf::RenderWindow *window)
 {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
-    if (text_.getGlobalBounds().contains(mousePos.x, mousePos.y))
+    if (m_text.getGlobalBounds().contains(mousePos.x, mousePos.y))
     {
-        text_.setFillColor(hoverColor_);
-        if (event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        m_text.setFillColor(m_hoverColor);
+        if (event->type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            if (click_ != NULL)
+            if (m_click != NULL)
             {
-                click_();
+                m_click();
             }
-            text_.setFillColor(color_);
+            m_text.setFillColor(m_color);
         }
     }
     else
     {
-        text_.setFillColor(color_);
+        m_text.setFillColor(m_color);
     }
 }
 
 void Button::setPosition(float x, float y)
 {
-    text_.setPosition(x, y);
+    m_text.setPosition(x, y);
 }
 
 void Button::setColor(sf::Color color)
 {
-    color_ = color;
+    m_color = color;
+    m_text.setFillColor(m_color);
 }
 
 void Button::setHoverColor(sf::Color color)
 {
-    hoverColor_ = color;
+    m_hoverColor = color;
 }
 
 void Button::setActive(const bool active)
 {
-    isActive_ = active;
+    m_isActive = active;
 }
 
 float Button::getWidth() const
 {
-    return text_.getGlobalBounds().width;
+    return m_text.getGlobalBounds().width;
 }
 
 float Button::getHeigth() const
 {
-    return text_.getGlobalBounds().height;
+    return m_text.getGlobalBounds().height;
 }

@@ -1,6 +1,15 @@
 #include "merge_sort.hpp"
 #include <iostream>
 
+MergeSort::MergeSort()
+{
+}
+
+MergeSort::~MergeSort()
+{
+    delete m_cancleBtn;
+}
+
 void MergeSort::sort(std::vector<sf::RectangleShape> &lines, sf::RenderWindow &window)
 {
     const int start = 0;
@@ -22,6 +31,19 @@ void MergeSort::mergeSort(std::vector<sf::RectangleShape> &lines, const int star
 
 void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, const int mid, const int end, sf::RenderWindow &window)
 {
+    sf::Font font;
+    font.loadFromFile("peach_days.ttf");
+
+    Button cancleBtn(font, "Cancle");
+    cancleBtn.setColor(sf::Color::White);
+    cancleBtn.setPosition(40, 20);
+    cancleBtn.setHoverColor(sf::Color::Green);
+    cancleBtn.onClick([&]()
+                      { std::cout << "Clicked!" << std::endl;
+                      return; });
+
+    sf::Event event;
+
     // DRAWING VARIABLES
     const int win_width = window.getSize().x;
     const int win_height = window.getSize().y;
@@ -53,14 +75,14 @@ void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, c
         if (left[i].getSize().y < right[j].getSize().y)
         {
             lines[k] = left[i];
-            lines[k].setPosition(k * width, win_height);
+            lines[k].setPosition((k + 1) * width, win_height);
             lines[k].setFillColor(sf::Color::Red);
             i++;
         }
         else if (right[j].getSize().y <= left[i].getSize().y)
         {
             lines[k] = right[j];
-            lines[k].setPosition(k * width, win_height);
+            lines[k].setPosition((k + 1) * width, win_height);
             lines[k].setFillColor(sf::Color::Red);
             j++;
         }
@@ -71,8 +93,9 @@ void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, c
         {
             window.draw(lines[d]);
         }
+        cancleBtn.draw(&window);
         window.display();
-        sf::sleep(sf::milliseconds(100.0f - speed_));
+        sf::sleep(sf::milliseconds(100.0f - m_speed));
         lines[k].setFillColor(sf::Color::White);
 
         k++;
@@ -82,7 +105,7 @@ void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, c
     while (i < leftSize)
     {
         lines[k] = left[i];
-        lines[k].setPosition(k * width, win_height);
+        lines[k].setPosition((k + 1) * width, win_height);
 
         // DRAW
         window.clear();
@@ -90,8 +113,9 @@ void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, c
         {
             window.draw(lines[d]);
         }
+        cancleBtn.draw(&window);
         window.display();
-        sf::sleep(sf::milliseconds(100.0f - speed_));
+        sf::sleep(sf::milliseconds(100.0f - m_speed));
         lines[k].setFillColor(sf::Color::White);
 
         k++;
@@ -101,7 +125,7 @@ void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, c
     while (j < rightSize)
     {
         lines[k] = right[j];
-        lines[k].setPosition(k * width, win_height);
+        lines[k].setPosition((k + 1) * width, win_height);
 
         // DRAW
         window.clear();
@@ -109,8 +133,9 @@ void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, c
         {
             window.draw(lines[d]);
         }
+        cancleBtn.draw(&window);
         window.display();
-        sf::sleep(sf::milliseconds(100.0f - speed_));
+        sf::sleep(sf::milliseconds(100.0f - m_speed));
         lines[k].setFillColor(sf::Color::White);
 
         k++;
@@ -120,5 +145,5 @@ void MergeSort::merge(std::vector<sf::RectangleShape> &lines, const int start, c
 
 void MergeSort::setSpeed(const float speed)
 {
-    speed_ = speed;
+    m_speed = speed;
 }

@@ -7,61 +7,61 @@ SpriteButton::SpriteButton(sf::String imagePath)
     if (texture.loadFromFile(imagePath))
     {
         texture.setSmooth(true);
-        texture_ = texture;
+        m_texture = texture;
         sf::Sprite sprite;
-        sprite.setTexture(texture_);
-        sprite_ = sprite;
+        sprite.setTexture(m_texture);
+        m_sprite = sprite;
     }
 }
 
 void SpriteButton::draw(sf::RenderWindow &window)
 {
-    window.draw(sprite_);
+    window.draw(m_sprite);
 }
 
 void SpriteButton::onClick(std::function<void()> callback)
 {
-    click_ = callback;
+    m_click = callback;
 }
 
 void SpriteButton::handleEvent(sf::Event event, sf::RenderWindow &window)
 {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
-    if (sprite_.getGlobalBounds().contains(mousePos.x, mousePos.y))
+    if (m_sprite.getGlobalBounds().contains(mousePos.x, mousePos.y))
     {
-        sprite_.setColor(hoverColor_);
+        m_sprite.setColor(m_hoverColor);
         if (event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            if (click_ != NULL)
+            if (m_click != NULL)
             {
-                click_();
+                m_click();
             }
-            sprite_.setColor(color_);
+            m_sprite.setColor(m_color);
         }
     }
     else
     {
-        sprite_.setColor(color_);
+        m_sprite.setColor(m_color);
     }
 }
 
 void SpriteButton::setPosition(float x, float y)
 {
-    sprite_.setPosition(x, y);
+    m_sprite.setPosition(x, y);
 }
 
 void SpriteButton::setColor(sf::Color color)
 {
-    color_ = color;
+    m_color = color;
 }
 
 void SpriteButton::setHoverColor(sf::Color color)
 {
-    hoverColor_ = color;
+    m_hoverColor = color;
 }
 
 float SpriteButton::getWidth() const
 {
-    return sprite_.getGlobalBounds().width;
+    return m_sprite.getGlobalBounds().width;
 }

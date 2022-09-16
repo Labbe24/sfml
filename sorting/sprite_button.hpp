@@ -17,11 +17,11 @@ public:
     float getWidth() const;
 
 private:
-    sf::Sprite sprite_;
-    sf::Texture texture_;
-    std::function<void()> click_;
-    sf::Color color_;
-    sf::Color hoverColor_;
+    sf::Sprite m_sprite;
+    sf::Texture m_texture;
+    std::function<void()> m_click;
+    sf::Color m_color;
+    sf::Color m_hoverColor;
 };
 
 #endif

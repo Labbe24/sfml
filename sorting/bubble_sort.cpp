@@ -31,7 +31,7 @@ void BubbleSort::sort(std::vector<sf::RectangleShape> &v, sf::RenderWindow &wind
                 window.draw(v[d]);
             }
             window.display();
-            sf::sleep(sf::milliseconds(100.0f - speed_));
+            sf::sleep(sf::milliseconds(100.0f - m_speed));
             v[j].setFillColor(sf::Color::White);
         }
     }
@@ -39,5 +39,5 @@ void BubbleSort::sort(std::vector<sf::RectangleShape> &v, sf::RenderWindow &wind
 
 void BubbleSort::setSpeed(const float speed)
 {
-    speed_ = speed;
+    m_speed = speed;
 }
