@@ -1,0 +1,1 @@
+#include "chessboardcell.h"
