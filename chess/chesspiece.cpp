@@ -1,7 +1,7 @@
 #include <iostream>
 #include "chesspiece.h"
 
-ChessPiece::ChessPiece(sf::RenderWindow &window, const char *imagePath)
+ChessPiece::ChessPiece(sf::RenderWindow &window, const char *imagePath, const float x, const float y)
     : m_Window(&window)
 {
     sf::Texture texture;
@@ -11,6 +11,9 @@ ChessPiece::ChessPiece(sf::RenderWindow &window, const char *imagePath)
         m_Texture = texture;
         m_Sprite.setTexture(m_Texture);
     }
+    this->m_ToCell = new ChessBoardCell();
+    this->m_ToCell->setPosition(x - 20.f, y - 20.f);
+    this->setPosition(x, y);
 }
 
 ChessPiece::ChessPiece(const ChessPiece &other)
@@ -52,6 +55,25 @@ void ChessPiece::handleEvent(const sf::Event &event)
     }
 }
 
+bool ChessPiece::containsMouse() const
+{
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*m_Window);
+
+    if (m_Sprite.getGlobalBounds().contains(mousePos.x, mousePos.y))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ChessPiece::validMove(const ChessBoardCell chessCell)
+{
+    return true;
+}
+
 void ChessPiece::setToCell(ChessBoardCell &toCell)
 {
     m_ToCell = &toCell;
@@ -60,4 +82,9 @@ void ChessPiece::setToCell(ChessBoardCell &toCell)
 void ChessPiece::setPosition(const float x, const float y)
 {
     m_Sprite.setPosition(x, y);
+}
+
+ChessBoardCell ChessPiece::getToCell() const
+{
+    return *m_ToCell;
 }

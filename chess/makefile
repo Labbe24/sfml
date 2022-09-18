@@ -11,9 +11,9 @@ all: app
 %.o: %.hpp
 		$(CXX) -c $< -o $@
 
-app: main.o chesspiece.o chessboard.o chessboardcell.o 
+app: main.o whitepawn.o blackpawn.o chesspiece.o chessboard.o chessboardcell.o 
 		@echo "** Building the app"
-		$(CXX) -o app main.o chesspiece.o  chessboard.o chessboardcell.o $(LIBS)
+		$(CXX) -o app main.o whitepawn.o blackpawn.o chesspiece.o  chessboard.o chessboardcell.o $(LIBS)
 
 clean:
 		@echo "** Removing object files and executable..."

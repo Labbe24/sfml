@@ -10,7 +10,7 @@ public:
     void draw();
     void handleEvent(const sf::Event &event);
     ChessBoardCell &getActiveCell();
-    ChessBoardCell getSelectedCell() const;
+    ChessBoardCell &getSelectedCell();
 
 private:
     sf::RenderWindow *m_Window;

@@ -11,6 +11,10 @@ ChessBoard::ChessBoard(sf::RenderWindow &window)
         {
             ChessBoardCell chessBoardCell(window, white ? sf::Color::Green : sf::Color::Blue);
             chessBoardCell.setPosition(j * 100, i * 100);
+            if (i < 2 || i > 6)
+            {
+                chessBoardCell.setAvailable(false);
+            }
             m_ChessBoardCells.push_back(chessBoardCell);
             white = !white;
         }
@@ -49,7 +53,7 @@ ChessBoardCell &ChessBoard::getActiveCell()
     return m_ChessBoardCells[0];
 }
 
-ChessBoardCell ChessBoard::getSelectedCell() const
+ChessBoardCell &ChessBoard::getSelectedCell()
 {
     for (int i = 0; i < 64; i++)
     {
